@@ -132,9 +132,9 @@ def dato_ingresado(lista:list,dato:str)->str:
         while flag_primera == True or flag_valido == True:
             if flag_primera == True:
                 flag_primera = False
-                ingreso_de_dato_pedido = input("Ingrese la busqueda que nececita: ").lower()
+                ingreso_de_dato_pedido = input("Ingrese la busqueda que nececita: ")#.lower() ->Me funcionaba rompe codigo el .lower ahora
             else:
-                ingreso_de_dato_pedido = input("No exixte ese personaje. Vuelve a ingresar: ").lower()
+                ingreso_de_dato_pedido = input("No exixte ese personaje. Vuelve a ingresar: ")#.lower()
             for luchadores in lista:
                 if ingreso_de_dato_pedido in luchadores[dato]:
                     flag_valido = False
