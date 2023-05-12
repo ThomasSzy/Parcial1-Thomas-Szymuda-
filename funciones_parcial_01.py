@@ -29,7 +29,7 @@ def traer_datos(path:str)->list:
             luchadores = {}
             luchadores["id"] = int(lectura[0])
             luchadores["personaje"] = lectura[1].lower()
-            luchadores["raza"] = re.split(r"-(?=[H])",lectura[2].lower()) #->los parentesis hace que con el ? no te reemplace la H
+            luchadores["raza"] = re.split(r"-(?=[H])",lectura[2]) #->los parentesis hace que con el ? no te reemplace la H
             luchadores["poder_de_pelea"] = int(lectura[3].replace(" ",""))
             luchadores["poder_de_ataque"] = int(lectura[4].replace(" ",""))
             luchadores["habilidades"] = re.split(r"\s\|\$\%|\|\$\%",lectura[5].strip().lower())
