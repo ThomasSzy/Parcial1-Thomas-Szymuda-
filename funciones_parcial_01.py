@@ -57,7 +57,7 @@ def orden_id(path:str)->None:
 #2
 def separarlos(lista:list,key:str)->None:
     """     
-    Brief:Realizamos un diccionario el cual cuente las cualquier tipo de str que le agreguemos a la funcion y devuelve un diccionario
+    Brief:Realizamos un diccionario el cual cuente  cualquier tipo de str que le agreguemos a la funcion y devuelve un diccionario
             con las veces que aparece en la lista.
     Parameters:
     diccionario: guarda los nombres que hay en cada key y cuenta cuantos hay dentro de cada una.
@@ -207,7 +207,7 @@ def personaje_jugador(lista:list)->tuple:
             personaje_usuario_poder = personaje["poder_de_ataque"]
     return personaje_usuario_poder,ingreso_de_dato_pedido
 
-def batalla_personajes(lista:list):
+def batalla_personajes(lista:list)->None:
     """     
         Brief:se comparan los poderes del bot y el personaje del usuario y gana el que mas poder tenga
             en caso de empatar estaran ambos nombres y dira empate, y se envia al archivo.txt con
@@ -234,19 +234,60 @@ def batalla_personajes(lista:list):
     with open("archivo.txt", "a",encoding = "utf-8") as archivo:
         archivo.write(f"La fecha  y hora de la batalla fue {fecha_hora_batalla} y {gana}\n")
 #-----------------------------------------------#
-#6
-def ingreso_nuevo_personaje(lista:list):
-        print("!Ingrese   --   Raza!")
-        ingreso_de_dato_pedido = dato_ingresado(lista,"raza")
-        print("!Ingrese   --   habilidad")
-        ingreso_de_dato_pedido = dato_ingresado(lista, "habilidades")
+#6 y 7
+def ingreso_habilidades_usuario(lista:list)->list:
+    """
+    Brief:Genera un archivo json con la raza y la habilidad de titulo y generar las id que creamos
+    
+    Parameters: 
+    ingreso_raza y ingreso_habilidad:Validamos el dato enviado 
+                                    reutilizando la varible para 
+                                    validar los datos
+    personaje_encontrado: lo inicializamos en falso para encontrar un personaje 
+                        con ese criterio
 
-        print(ingreso_de_dato_pedido)
-        personajes_varios_criterios(lista)
+    for: buscamos en la lista y comenzamos con validar los datos.
+    el primero if validamos que le ingreso de raza sea raza y lo mismo con habilidad
+    en caso de no ingresar por no tener coincidencias retorna un None
 
-def personajes_varios_criterios(lista:list):
-    pass
+    .append: este append agrega el personaje en modo lista
+    
+    segundo if: si se encuentra un personaje ingrea a ese if realizando el titulo y creando el archivo.json
+    nombre_con_guines remplazamos el espacio por una baja baja para generar el nombre de manera correcta
 
+    confirmamos que se guardaron los datos
+    return: returnamos el nombre con guines
+    """
+    print("!Ingrese una Raza!")
+    ingreso_raza = dato_ingresado(lista,"raza")
+    print("!Ingrese una Habilidad!")
+    ingreso_habilidad = dato_ingresado(lista,"habilidades")
+    data_personajes = {}
+    data_personajes["personaje"] = []
+    
+    personaje_encontrado = False
+    for personaje in lista:
+        if ingreso_raza in personaje['raza'] and ingreso_habilidad in personaje['habilidades']:
+            data_personajes['personaje'].append({'nombre': personaje['personaje'],
+                                                'poder de ataque': personaje['poder_de_ataque'],
+                                                'habilidades': personaje['habilidades']})
+            personaje_encontrado = True
+    if personaje_encontrado:
+        nombre_archivo = f"{ingreso_raza}_{ingreso_habilidad}.json"
+        nombre_con_guiones = nombre_archivo.replace(" ","_")
+        
+        with open(nombre_con_guiones, "w",encoding = "utf-8") as lista:
+            json.dump(data_personajes, lista, indent=4)
+        
+        print(f"Se ha guardado la informacion correctamente en el archivo {nombre_con_guiones}\n")
+        print(f"{data_personajes}")
+        return nombre_con_guiones
+        
+    else:
+        print("No se han encontrado un personaje con esa raza y esa habilidad.")
+        
+        return(-1)
+#-----------------------------------------------#
 #-----------------------------------------------#
 #menu
 def imprimir_menu(menu:list)->None:
@@ -257,10 +298,10 @@ def imprimir_menu(menu:list)->None:
     """
     for opcion in menu:
             print(opcion)
-menu = ["1.Mostrar la datos del archivo","2.Mostrar las cantidad por raza",
+menu = ["1.Mostrar los datos del archivo","2.Mostrar las cantidad por raza",
             "3.Lista de personajes por raza y sus especificaciones",
             "4.Ingrese habilidad y mostramos personajes que tengan esas habilidades",
-            "5.Jugar Batalla","6.Salir"]
+            "5.Jugar Batalla","6,7.json_habilidades","8.salir"]
 
 lista_personajes = traer_datos("DBZ.csv")
 
@@ -287,5 +328,9 @@ def dragon_ball_app(path:str)->None:
             case 5:
                 jugar_batallas(lista_personajes)
             case 6:
-                ingreso_nuevo_personaje(lista_personajes)
-dragon_ball_app("DBZ.csv")
+                ingreso_habilidades_usuario(lista_personajes)
+            case 7:
+                ingreso_habilidades_usuario(lista_personajes)#Si ingresa 7 nuevamente lo reenvia al 6
+            case 8:
+                break
+
